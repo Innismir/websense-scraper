@@ -32,6 +32,7 @@
 
 
 import getpass, sys, datetime, ipaddr
+from ConfigParser import SafeConfigParser
 from WebSense import *
 
 today = datetime.datetime.now()
