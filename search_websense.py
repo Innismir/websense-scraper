@@ -31,7 +31,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-import getpass, sys, datetime
+import getpass, sys, datetime, ipaddr
 from WebSense import *
 
 today = datetime.datetime.now()
@@ -60,7 +60,20 @@ found_domains = []
 
 for domain in lines:
 
-    if websense.hostname_search(domain, start_date, end_date):
+    found = 0
+
+    if domain == "":
+        continue
+
+    try:
+        ipaddr.IPv4Address(domain)
+        if websense.destinationip_search(domain, start_date, end_date):
+            found = 1
+    except:
+        if websense.hostname_search(domain, start_date, end_date):
+            found = 1
+
+    if found == 1:
         sys.stdout.write('!')
         found_domains.append(domain)
     else:
