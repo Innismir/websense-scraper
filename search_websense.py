@@ -42,13 +42,13 @@ end_date = today.strftime("%Y-%m-%d")
 
 print "Searching from " + start_date + " to " + end_date
 
-username = ''
-triton_host = ''
-triton_port = ''
+#Read the configuration file
+config = SafeConfigParser()
+config.read('config.ini')
 
-password = getpass.getpass("Password: ")
+password = getpass.getpass("WebSense Password: ")
 
-websense = WebSenseTriton(triton_host + ':' + triton_port, username, password)
+websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
 
 f = open('urls.txt')
 lines = f.read().splitlines()
