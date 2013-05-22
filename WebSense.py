@@ -66,7 +66,7 @@ class WebSenseTriton:
             return 0
 
     def destinationip_search(self, ipaddress, start_date, end_date):
-        url = 'https://' + self.host + '/explorer_wse/ws_irpt.exe?qcol=13&qtext=' + ipaddr + '&startDate=' + start_date + '&endDate=' + end_date
+        url = 'https://' + self.host + '/explorer_wse/ws_irpt.exe?qcol=13&qtext=' + ipaddress + '&startDate=' + start_date + '&endDate=' + end_date
 
         result = self.browser.open(url)
         data = result.get_data()
