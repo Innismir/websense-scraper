@@ -54,10 +54,6 @@ parser.add_argument('-f', '--file', required=True, action='store')
 
 args = parser.parse_args()
 
-password = getpass.getpass("WebSense Password: ")
-
-websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
-
 try:
     f = open(args.file)
     lines = f.read().splitlines()
@@ -65,6 +61,10 @@ try:
 except:
     print "Unable to read file..."
     sys.exit(1)
+
+password = getpass.getpass("WebSense Password: ")
+
+websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
 
 print "Searching..."
 
