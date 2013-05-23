@@ -31,7 +31,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-import getpass, sys, datetime, ipaddr
+import getpass, sys, datetime, ipaddr, argparse
 from ConfigParser import SafeConfigParser
 from WebSense import *
 
@@ -47,13 +47,22 @@ print "Searching from " + start_date + " to " + end_date
 config = SafeConfigParser()
 config.read('config.ini')
 
+#Read the command line arguments
+parser = argparse.ArgumentParser()
+
+group.add_argument('-f', '--file', required=True, action='store')
+
 password = getpass.getpass("WebSense Password: ")
 
 websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
 
-f = open('urls.txt')
-lines = f.read().splitlines()
-f.close()
+try:
+    f = open(args.file)
+    lines = f.read().splitlines()
+    f.close()
+except:
+    print "Unable to read file..."
+    sys.exit(1)
 
 print "Searching..."
 
