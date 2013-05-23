@@ -50,7 +50,9 @@ config.read('config.ini')
 #Read the command line arguments
 parser = argparse.ArgumentParser()
 
-group.add_argument('-f', '--file', required=True, action='store')
+parser.add_argument('-f', '--file', required=True, action='store')
+
+args = parser.parse_args()
 
 password = getpass.getpass("WebSense Password: ")
 
