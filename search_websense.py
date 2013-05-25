@@ -55,9 +55,7 @@ group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument('-u', '--url', action='store')
 group.add_argument('-f', '--file', action='store')
 
-password = getpass.getpass("WebSense Password: ")
-
-websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
+args = parser.parse_args()
 
 if args.file is None:
 
@@ -89,6 +87,10 @@ else:
     except:
         print "Unable to read file..."
         sys.exit(1)
+
+password = getpass.getpass("WebSense Password: ")
+
+websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
 
 print "Searching..."
 
