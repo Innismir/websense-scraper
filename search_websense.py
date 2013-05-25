@@ -3,7 +3,7 @@
 # seach_websense.py - Script that uses the WebSense scraper class to search
 # a WebSense Triton system for hosts listed in urls.txt
 #
-# USAGE: ./search_websense.py
+# USAGE: ./search_websense.py [-f <FILE>] [-u <URL>]
 #
 # All code Copyright (c) 2013, Ben Jackson and Mayhemic Labs -
 # bbj@mayhemiclabs.com. All rights reserved.
@@ -31,7 +31,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-import getpass, sys, datetime, ipaddr, argparse
+import getpass, sys, datetime, ipaddr, argparse, requests
 from ConfigParser import SafeConfigParser
 from WebSense import *
 
@@ -50,19 +50,45 @@ config.read('config.ini')
 #Read the command line arguments
 parser = argparse.ArgumentParser()
 
-group.add_argument('-f', '--file', required=True, action='store')
+#The user needs to specify iether a URL or a filename
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument('-u', '--url', action='store')
+group.add_argument('-f', '--file', action='store')
 
 password = getpass.getpass("WebSense Password: ")
 
 websense = WebSenseTriton(config.get('websense', 'host') + ':' + config.get('websense', 'port'), config.get('websense', 'username'), password)
 
-try:
-    f = open(args.file)
-    lines = f.read().splitlines()
-    f.close()
-except:
-    print "Unable to read file..."
-    sys.exit(1)
+if args.file is None:
+
+    #If user has told us it's a URL download it
+
+    print "Downloading " + args.url + "..."
+
+    #Make the request
+
+    sample_request = requests.get(args.url)
+
+    if sample_request.status_code == 200:
+
+        lines = sample_request.splitlines()
+
+    else:
+
+        #If it doesn't return a 200, abort....
+
+        print args.url + " did not return HTTP 200..."
+        sys.exit(1)
+
+else:
+
+    try:
+        f = open(args.file)
+        lines = f.read().splitlines()
+        f.close()
+    except:
+        print "Unable to read file..."
+        sys.exit(1)
 
 print "Searching..."
 
